@@ -52,12 +52,28 @@ void GenerateLotteryWinNumbers()
 {
 	uint16_t nWinPick;
 	srand(time(NULL));
+	bool bGenerateNumAccepted = false;
 	
 	for (int i = 0; i < NUM_MAX_PICK; i++)
 	{
-		// Random generate win number from 1 to 49
-		nWinPick = rand() % 49 + 1;
-		nWinNums[i] = static_cast<uint16_t>(nWinPick);
+		do
+		{
+			// Random generate win number from 1 to 49
+			nWinPick = rand() % 49 + 1;
+			for (int j = 0; j < NUM_MAX_PICK; j++)
+			{
+				if (nWinPick == nWinNums[j])
+				{
+					break;
+				}
+				if (j == NUM_MAX_PICK - 1)
+				{
+					bGenerateNumAccepted = true;
+					nWinNums[i] = static_cast<uint16_t>(nWinPick);
+				}
+			}
+		} while(bGenerateNumAccepted == false);
+		bGenerateNumAccepted = false;
 	}
 	
 	cout << "\nThe winning numbers are: ";
