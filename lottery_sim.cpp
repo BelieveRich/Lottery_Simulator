@@ -12,12 +12,14 @@ using namespace std;
 // Constant Declaration
 static const uint16_t NUM_MAX_PICK = 6;
 
-// Forward Declaration
+// Global Variable Declaration
 static uint16_t nPicks[NUM_MAX_PICK];
 static uint16_t nWinNums[NUM_MAX_PICK];
 
+// Forward Declaration
 void GenerateLotteryWinNumbers();
 void SortNumbers(uint16_t* nInput, uint16_t length);
+bool CheckIfUserWins();
 
 // Main Implementation
 int main()
@@ -44,6 +46,8 @@ int main()
 	// 2. Generate the lottery winning numbers
 	GenerateLotteryWinNumbers();
 	
+	// 3. Determine whether your pick won or not1
+	CheckIfUserWins();
 	return 0;
 }
 
@@ -116,4 +120,43 @@ void SortNumbers(uint16_t* nInput, uint16_t length)
 	
 	// 2. Save the sorted numbers into the original array
 	memcpy(nInput, nTempArray, sizeof(nInput[0]) * length);
+	
+	// 3. Free malloc memory
+	delete nTempArray;
+}
+
+bool CheckIfUserWins()
+{
+	bool result = false;
+	int16_t nMatchedIndex[NUM_MAX_PICK];
+	memset(nMatchedIndex, 0, sizeof(nMatchedIndex[0])*NUM_MAX_PICK);
+	int16_t nMatchedIdxCount = 0;
+	
+	for (int i = 0; i < NUM_MAX_PICK; i++)
+	{
+		for (int j = 0; j <NUM_MAX_PICK; j++)
+		{
+			if (nWinNums[j] == nPicks[i])
+			{
+				nMatchedIndex[nMatchedIdxCount++] = i;
+			}
+		}
+	}
+	
+	// Output how many numbers matched
+	cout << "\nCongratulation Your number matched: " << nMatchedIdxCount << endl;
+	if (nMatchedIdxCount > 0)
+	{
+		for (int i = 0; i < nMatchedIdxCount; i++)
+		{
+			cout << (i == 0?"Matching Numbers are: ":", ") << nPicks[nMatchedIndex[i]];
+		}
+		
+		if (nMatchedIdxCount == NUM_MAX_PICK)
+		{
+			cout << "CONGRATULATION!! OH MY GOD!! YOU HAVE WON THE FIRST PRIZE 100MIL!!!" << endl;
+			return true;
+		}
+	}
+	return result;
 }
