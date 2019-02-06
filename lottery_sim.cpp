@@ -48,6 +48,52 @@ int main()
 	
 	// 3. Determine whether your pick won or not1
 	CheckIfUserWins();
+	
+	// 4. Run simulator to count how many times until a first-prize win can occur
+	uint32_t sim_iteration_count = 0;
+	while (sim_iteration_count < 10)
+	{
+		bool first_prize_win = false;
+		int64_t iteration = 0;
+		bool bGenerateNumAccepted = false;	
+		do 
+		{
+			for (int i = 0; i <NUM_MAX_PICK; i++)
+			{
+				do
+				{
+					// Random generate input number
+					int16_t nRandomNum = rand() % 49 + 1;
+					for (int j = 0; j < NUM_MAX_PICK; j++)
+					{
+						if (nRandomNum == nPicks[j])
+						{
+							break;
+						}
+						if (j == NUM_MAX_PICK - 1)
+						{
+							bGenerateNumAccepted = true;
+							nPicks[i] = static_cast<uint16_t>(nRandomNum);
+						}
+					}				
+				} while (bGenerateNumAccepted == false);
+				bGenerateNumAccepted = false;
+			}
+			first_prize_win = CheckIfUserWins();
+			iteration++;
+		} while (first_prize_win != true);
+		cout << "Win Occurs @ " << (float)(iteration/10e6) << " Million times" << endl;
+		for (int i = 0; i < NUM_MAX_PICK; i++)
+		{
+			cout << nPicks[i] << " ";
+		}
+		cout << "\n Winning Numbers";
+		for (int i = 0; i < NUM_MAX_PICK; i++)
+		{
+			cout << nWinNums[i] << " ";
+		}
+		sim_iteration_count++;
+	}
 	return 0;
 }
 
@@ -144,17 +190,17 @@ bool CheckIfUserWins()
 	}
 	
 	// Output how many numbers matched
-	cout << "\nCongratulation Your number matched: " << nMatchedIdxCount << endl;
+	//TODO: cout << "\nCongratulation Your number matched: " << nMatchedIdxCount << endl;
 	if (nMatchedIdxCount > 0)
 	{
 		for (int i = 0; i < nMatchedIdxCount; i++)
 		{
-			cout << (i == 0?"Matching Numbers are: ":", ") << nPicks[nMatchedIndex[i]];
+			//TODO: cout << (i == 0?"Matching Numbers are: ":", ") << nPicks[nMatchedIndex[i]];
 		}
 		
 		if (nMatchedIdxCount == NUM_MAX_PICK)
 		{
-			cout << "CONGRATULATION!! OH MY GOD!! YOU HAVE WON THE FIRST PRIZE 100MIL!!!" << endl;
+			cout << "\nCONGRATULATION!! OH MY GOD!! YOU HAVE WON THE FIRST PRIZE 100MIL!!!" << endl;
 			return true;
 		}
 	}
